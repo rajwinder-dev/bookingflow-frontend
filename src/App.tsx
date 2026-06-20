@@ -1,5 +1,4 @@
 import {
-  MutationCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
@@ -10,11 +9,6 @@ import { Toaster } from "./components/ui/sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
 import router from "./router";
 const queryclient = new QueryClient({
-  // mutationCache: new MutationCache({
-  //   onError: (error: any) => {
-  //     console.log(error);
-  //   },
-  // }),
   defaultOptions: {
     queries: {
       retry: (failureCount, error) => {

@@ -24,7 +24,7 @@ function useAuth() {
     onSuccess: (data) => {
       tokenManager.set(data.data.accessToken);
       queryclient.invalidateQueries({ queryKey: ["auth-details"] });
-      navigate(-1);
+      navigate("/events");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -35,7 +35,7 @@ function useAuth() {
     onSuccess: (data) => {
       tokenManager.set(data.data.accessToken);
       queryclient.invalidateQueries({ queryKey: ["auth-details"] });
-      navigate("/");
+      navigate("/events");
     },
     onError: (error) => {
       toast.error(error.message);
