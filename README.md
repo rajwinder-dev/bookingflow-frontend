@@ -1,54 +1,121 @@
-# React + TypeScript + Vite
+# Booking Flow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A deom ticket booking app .
 
-Currently, two official plugins are available:
+## Features
+- **Seat selection** — Interactive seat map with transparent pricing
+- **Authentication** — Manual auth
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite 8](https://vite.dev/) — dev server and build tool
+- [React Router 7](https://reactrouter.com/) — client-side routing
+- [TanStack Query](https://tanstack.com/query) — server state management
+- [Tailwind CSS 4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) — styling and components
+- [Zustand](https://zustand-demo.pmnd.rs/) — client state
+- [Axios](https://axios-http.com/) — HTTP client
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- [Node.js](https://nodejs.org/) 18 or later
+- A running backend API (for full functionality beyond demo UI)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Environment Variables
+
+Copy the example env file and adjust the API URL to point at your backend:
+
+```bash
+cp .example.env .env
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+| Variable       | Description                          | Default                  |
+| -------------- | ------------------------------------ | ------------------------ |
+| `VITE_API_URL` | Base URL of the backend API server   | `http://localhost:3000`  |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+In development, requests to `/api` are proxied to `VITE_API_URL` via Vite (see `vite.config.ts`). The app resolves API calls to `${VITE_API_URL}/api/v1` when the variable is set, or `/api/v1` (proxied) when it is not.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## Development
+
+Install dependencies:
+
+```bash
+npm install
 ```
+
+Start the dev server (binds to all network interfaces via `--host`):
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173` (or the next free port Vite assigns).
+
+Make sure your backend is running at the URL configured in `.env` before testing authenticated routes or live event data.
+
+## Production
+
+Build optimized static assets:
+
+```bash
+npm run build
+```
+
+Output is written to the `dist/` directory.
+
+### Preview the production build locally
+
+```bash
+npm run preview
+```
+
+This serves the built files so you can verify the production bundle before deploying.
+
+### Deploy
+
+Serve the contents of `dist/` with any static file host (Nginx, Apache, Vercel, Netlify, S3 + CloudFront, etc.).
+
+When deploying, set `VITE_API_URL` to your production backend URL **at build time** — Vite inlines env variables during `npm run build`, so rebuild after changing them.
+
+Example:
+
+```bash
+VITE_API_URL=https://api.example.com npm run build
+```
+
+## Available Scripts
+
+| Script          | Description                              |
+| --------------- | ---------------------------------------- |
+| `npm run dev`     | Start Vite dev server with HMR           |
+| `npm run build`   | Type-check and build for production      |
+| `npm run preview` | Preview the production build locally     |
+| `npm run lint`    | Run ESLint                               |
+| `npm run shadcn:add` | Add shadcn/ui components via CLI      |
+
+## Project Structure
+
+```
+src/
+├── features/
+│   ├── auth/          # Login, signup, password reset
+│   ├── events/        # Event listing and detail pages
+│   └── home/          # Landing page (HomePage)
+├── components/ui/     # shadcn/ui components
+├── config/            # API configuration
+├── context/           # Global React context
+├── layouts/           # App shell layout
+├── hooks/             # Shared custom hooks
+└── router.tsx         # Route definitions
+```
+
+## Routes
+
+| Path                      | Page              |
+| ------------------------- | ----------------- |
+| `/`                       | Home              |
+| `/events`                 | Event listing     |
+| `/events/:eventId`        | Event detail      |
+| `/login`                  | Login             |
+| `/signup`                 | Sign up           |
+| `/forget-password`        | Forgot password   |
+| `/reset-password/:token`    | Reset password    |
