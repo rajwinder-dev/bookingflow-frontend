@@ -17,13 +17,12 @@ export const ActionCard = ({
   mySeatNumbers,
   selectedSeats,
   eventData,
-  setSelectedSeats
+  setSelectedSeats,
 }: props) => {
-
- const totalPrice =
+  const totalPrice =
     (selectedSeats.length + mySeatNumbers.length) * pricePerSeat;
-  const eventId = eventData.id
-  const queryClient = useQueryClient()
+  const eventId = eventData.id;
+  const queryClient = useQueryClient();
   const {
     mutate: reserveSeats,
     isPending: isReserving,
@@ -36,6 +35,9 @@ export const ActionCard = ({
       queryClient.invalidateQueries({ queryKey: ["event", { eventId }] });
       toast.success("Seats reserved successfully");
     },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const {
@@ -47,6 +49,9 @@ export const ActionCard = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["event", { eventId }] });
       toast.success("Reservation confirmed successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

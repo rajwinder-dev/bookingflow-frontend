@@ -1,7 +1,6 @@
+import axios, { type InternalAxiosRequestConfig } from "axios";
 import { authApi } from "@/features/auth/api";
 import { tokenManager } from "@/lib/tokenManager";
-import axios, { type InternalAxiosRequestConfig } from "axios";
-import { redirect } from "react-router";
 import { apiUrl } from "../config/apiconfig";
 import type {
   ApiResponse,
@@ -118,7 +117,9 @@ export async function deleteRequest<T = geneticApiResponse>({
   });
 }
 // axios helper
-export function buildQuery(input: Record<string, string | number | boolean | string[] | object>) {
+export function buildQuery(
+  input: Record<string, string | number | boolean | string[] | object>,
+) {
   const array: string[] = [];
   for (const [key, value] of Object.entries(input)) {
     if (Array.isArray(value)) {
@@ -146,17 +147,14 @@ export async function catchError<T>(callback: () => Promise<T>): Promise<T> {
         data: error.response?.data,
       };
     }
-    const unknownError = new Error("Unknown error occurred");
-    throw unknownError;
+    throw error;
   }
 }
 
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const token = tokenManager.get();
-    const organizationId = getOrgIdFromUrl();
     if (token) config.headers["Authorization"] = `Bearer ${token}`;
-    if (organizationId) config.headers["x-organization-id"] = organizationId;
     return config;
   },
   (error) => {
@@ -166,27 +164,25 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  async function (error) {
-    const originalRequest = error.config as InternalAxiosRequestConfig & {
-      _retry?: boolean;
-    };
-    if (error.response.data.code === "INVALID_TOKEN" && !originalRequest._retry) {
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (
+      error.response?.data?.code === "INVALID_TOKEN" &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
-      try {
-        const res = await authApi.refresh();
-        tokenManager.set(res.data.accessToken);
-        originalRequest.headers["Authorization"] = `Bearer ${res.data.accessToken}`;
-        return api(originalRequest);
-      } catch (error) {
-        redirect("/login");
-        return Promise.reject(error);
-      }
+
+      const res = await authApi.refresh();
+      tokenManager.set(res.data.accessToken);
+
+      originalRequest.headers["Authorization"] =
+        `Bearer ${res.data.accessToken}`;
+
+      return api(originalRequest);
     }
+
     return Promise.reject(error);
   },
 );
 // apiClient.ts
-export function getOrgIdFromUrl() {
-  const match = window.location.pathname.match(/org\/([^/]+)/);
-  return match?.[1];
-}

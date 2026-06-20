@@ -10,17 +10,12 @@ import { Toaster } from "./components/ui/sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
 import router from "./router";
 const queryclient = new QueryClient({
-  mutationCache: new MutationCache({
-    onError: (error: any) => {
-      console.log(error);
-    },
-  }),
+  // mutationCache: new MutationCache({
+  //   onError: (error: any) => {
+  //     console.log(error);
+  //   },
+  // }),
   defaultOptions: {
-    mutations: {
-      onError: (error) => {
-        console.log("Error", error);
-      },
-    },
     queries: {
       retry: (failureCount, error) => {
         console.log(error);
