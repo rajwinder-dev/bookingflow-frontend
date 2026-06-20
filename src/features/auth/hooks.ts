@@ -18,6 +18,7 @@ function useAuth() {
     queryKey: ["auth-details"],
     retry: false,
   });
+
   const { mutate: loginUser, isPending: isLoggingIn } = useMutation({
     mutationFn: (data: LoginInput) => authApi.login(data),
     onSuccess: (data) => {
@@ -34,7 +35,7 @@ function useAuth() {
     onSuccess: (data) => {
       tokenManager.set(data.data.accessToken);
       queryclient.invalidateQueries({ queryKey: ["auth-details"] });
-      navigate(-1);
+      navigate("/");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -82,7 +83,8 @@ function useAuth() {
     mutationFn: authApi.logout,
     onSuccess: () => {
       tokenManager.clear();
-      queryclient.invalidateQueries({ queryKey: ["auth-details"] });
+      queryclient.removeQueries({ queryKey: ["auth-details"] });
+
       navigate("/");
     },
     onError: () => {

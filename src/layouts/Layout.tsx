@@ -5,8 +5,8 @@ import useAuth from "../features/auth/hooks";
 
 const Layout = () => {
   const navigate = useNavigate();
-  const { authDetails, logoutUser } = useAuth();
-
+  const { authDetails, logoutUser , isLoadingAuthDetails} = useAuth();
+  console.log(isLoadingAuthDetails)
   return (
     /* Changed to a flex column with a minimum height of the full viewport screen */
     <div className="bg-background text-foreground font-sans antialiased flex flex-col min-h-screen">
@@ -15,11 +15,10 @@ const Layout = () => {
         <div className="container mx-auto flex h-16 items-center justify-between px-6">
           <ProjectLogo />
           <div className="flex items-center gap-3">
-            {authDetails ? (
+            {authDetails?.data.id ? (
               <div className="flex items-center gap-4 text-sm font-medium">
                 {/* Active/Logged-in green pulse indicator */}
                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-
                 <div className="flex flex-col">
                   <span className="text-xs text-muted-foreground">
                     Logged As

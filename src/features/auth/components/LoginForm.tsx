@@ -52,7 +52,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   </Link>
                 </div>
 
-                <Input id="password" type="password" {...register("password")} />
+                <Input id="password" type="password" autoComplete="current-password" {...register("password")} />
 
                 {errors.password && (
                   <FieldDescription className="text-red-500">

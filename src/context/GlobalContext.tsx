@@ -1,18 +1,27 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { AuthDetails } from "@/features/auth/auth.zod";
+import useAuth from "@/features/auth/hooks";
+import type { ApiResponse } from "@/types/axis.types";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 type Theme = "light" | "dark";
 
 type ThemeContextType = {
   theme: Theme;
   toggleTheme: () => void;
-  setOrgId: React.Dispatch<React.SetStateAction<string | undefined>>;
-  orgId?: string | undefined;
+  authDetails?: ApiResponse<AuthDetails>;
+  logoutUser: () => void;
 };
 
 const GlobalContext = createContext<ThemeContextType | null>(null);
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
-  const [orgId, setOrgId] = useState<string | undefined>(undefined);
+  const { authDetails, logoutUser } = useAuth();
   const [theme, setTheme] = useState<Theme>(() => {
     return (localStorage.getItem("theme") as Theme) || "light";
   });
@@ -27,7 +36,9 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   }, [theme]);
 
   return (
-    <GlobalContext.Provider value={{ theme, toggleTheme, setOrgId, orgId }}>
+    <GlobalContext.Provider
+      value={{ theme, toggleTheme, authDetails, logoutUser }}
+    >
       {children}
     </GlobalContext.Provider>
   );
@@ -35,6 +46,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
 export const useGlobalContext = () => {
   const ctx = useContext(GlobalContext);
-  if (!ctx) throw new Error("useGlobalContext must be used inside GlobalProvider");
+  if (!ctx)
+    throw new Error("useGlobalContext must be used inside GlobalProvider");
   return ctx;
 };

@@ -27,12 +27,12 @@ const eventApi = {
     seatIds: string[];
   }) => {
     return postRequest({
-      path: `/booking/${eventId}/reserve`,
+      path: `/reservation/${eventId}/reserve`,
       data: { seatIds },
     });
   },
   confirmReservation: async ({ eventId }: { eventId: string }) => {
-    return patchRequest({ path: `/booking/${eventId}/confirm` });
+    return patchRequest({ path: `/reservation/${eventId}/confirm` });
   },
 };
 export default eventApi;

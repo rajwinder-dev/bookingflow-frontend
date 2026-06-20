@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router";
-import { ProjectLogo } from "./ProjectLogo";
-import useAuth from "../auth/hooks";
 
 const HomePage = () => {
   const navigate = useNavigate();

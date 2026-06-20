@@ -1,15 +1,18 @@
-import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  MutationCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AxiosError } from "axios";
 import { RouterProvider } from "react-router";
 import { Toaster } from "./components/ui/sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
-import { GlobalProvider } from "./context/GlobalContext";
 import router from "./router";
 const queryclient = new QueryClient({
-mutationCache: new MutationCache({
+  mutationCache: new MutationCache({
     onError: (error: any) => {
-      console.log(error); 
+      console.log(error);
     },
   }),
   defaultOptions: {
@@ -32,10 +35,8 @@ function App() {
     <>
       <QueryClientProvider client={queryclient}>
         <TooltipProvider>
-          <GlobalProvider>
-            <RouterProvider router={router} />
-            <Toaster />
-          </GlobalProvider>
+          <RouterProvider router={router} />
+          <Toaster />
           <ReactQueryDevtools />
         </TooltipProvider>
       </QueryClientProvider>

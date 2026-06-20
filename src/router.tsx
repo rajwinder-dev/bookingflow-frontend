@@ -7,10 +7,15 @@ import HomePage from "./features/home/HomePage";
 import Layout from "./layouts/Layout";
 import EventsPage from "./features/events/EventPage";
 import EventDetailPage from "./features/events/EventDetailPage";
+import { GlobalProvider } from "./context/GlobalContext";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <GlobalProvider>
+        <Layout />
+      </GlobalProvider>
+    ),
     children: [
       { index: true, element: <HomePage /> },
       { path: "events", element: <EventsPage /> },
