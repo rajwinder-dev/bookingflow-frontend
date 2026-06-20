@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import eventApi from "./api";
 import type { EventItem } from "./event.zod";
-import {  EventGrid } from "./components/EventCard";
+import { EventGrid } from "./components/EventGrid";
 
 const EventsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
